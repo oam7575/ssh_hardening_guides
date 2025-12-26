@@ -132,29 +132,13 @@
       <p><u>Note</u>: all commands below are to be executed as the <i>root</i> user.
       <ol>
         <li>
-          <h3>Re-generate the ED25519 and RSA keys</h3><span class="commands">rm /etc/ssh/ssh_host_*<br>
-            ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""<br>
-            ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""
-          </span>
+          <h3>Re-generate the ED25519 and RSA keys</h3><span class="commands">rm /etc/ssh/ssh_host_*<br>ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""<br>ssh-keygen -t rsa -b 4096 -f /etc/ssh/ssh_host_rsa_key -N ""</span>
         </li>
         <li>
-          <h3>Remove small Diffie-Hellman moduli</h3><span class="commands">awk '$5 >= 3071' /etc/ssh/moduli >
-            /etc/ssh/moduli.safe<br>
-            mv /etc/ssh/moduli.safe /etc/ssh/moduli</span>
+          <h3>Remove small Diffie-Hellman moduli</h3><span class="commands">awk '$5 >= 3071' /etc/ssh/moduli > /etc/ssh/moduli.safe<br>mv /etc/ssh/moduli.safe /etc/ssh/moduli</span>
         </li>
         <li>
-          <h3>Restrict supported key exchange, cipher, and MAC algorithms</h3><span class="commands">echo -e "# Restrict
-            key exchange, cipher, and MAC algorithms, as per sshaudit.com\n# hardening guide.\nKexAlgorithms
-            sntrup761x25519-sha512@openssh.com,gss-curve25519-sha256-,curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group18-sha512,diffie-hellman-group-exchange-sha256,gss-group16-sha512-,diffie-hellman-group16-sha512\n\nCiphers
-            chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-gcm@openssh.com,aes128-ctr\n\nMACs
-            hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com\n\nRequiredRSASize
-            3072\n\nHostKeyAlgorithms
-            sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256\n\nCASignatureAlgorithms
-            sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256\n\nGSSAPIKexAlgorithms
-            gss-curve25519-sha256-,gss-group16-sha512-\n\nHostbasedAcceptedAlgorithms
-            sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256\n\nPubkeyAcceptedAlgorithms
-            sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256"
-            > /etc/ssh/sshd_config.d/ssh-audit_hardening.conf</span>
+          <h3>Restrict supported key exchange, cipher, and MAC algorithms</h3><span class="commands">echo -e "# Restrict key exchange, cipher, and MAC algorithms, as per sshaudit.com hardening guide.\n<br><br>Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr,aes192-ctr,aes128-gcm@openssh.com,aes128-ctr\n\n<br><br>MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com\n\n<br><br>RequiredRSASize 3072\n\n<br><br>HostKeyAlgorithms sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256\n\n<br><br>CASignatureAlgorithms sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256\n\n<br><br>GSSAPIKexAlgorithms gss-curve25519-sha256-,gss-group16-sha512-\n\n<br><br>HostbasedAcceptedAlgorithms sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256\n\n<br><br>PubkeyAcceptedAlgorithms sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,rsa-sha2-256-cert-v01@openssh.com,sk-ssh-ed25519@openssh.com,ssh-ed25519,rsa-sha2-512,rsa-sha2-256" > /etc/ssh/sshd_config.d/ssh-audit_hardening.conf</span>
         </li>
         <li>
           <h3>Restart OpenSSH server</h3><span class="commands">service ssh restart</span>
@@ -167,15 +151,9 @@
             connections every 10 seconds from any one source address. An alternate solution is to set OpenSSH's
             PerSourceMaxStartups directive to 1 (note, however, that this can cause incomplete results during ssh-audit
             scans, as well as other client failures when bursts of connections are made).</p><span
-            class="commands">iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set<br>
-            iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j
-            DROP<br>
-            ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set<br>
-            ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j
-            DROP<br></span>
+            class="commands">iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set<br>iptables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP<br>ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --set<br>ip6tables -I INPUT -p tcp --dport 22 -m state --state NEW -m recent --update --seconds 10 --hitcount 10 -j DROP<br></span>
           <p>Enable persistence of the iptables rules across server reboots:</p><span
-            class="commands">DEBIAN_FRONTEND=noninteractive apt install -q -y netfilter-persistent
-            iptables-persistent<br>service netfilter-persistent save</span>
+            class="commands">DEBIAN_FRONTEND=noninteractive apt install -q -y netfilter-persistent iptables-persistent<br>service netfilter-persistent save</span>
         </li>
       </ol>
       <br>

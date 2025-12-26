@@ -12,7 +12,7 @@ window.onload = function onBodyLoad(e) {
 }
 
 function copy_to_clipboard(id) {
-  commands = search_children(document.getElementById(id)).replace(/<br>/gi, "\n").replace(/&gt;/gi, ">").replace(/&lt;/gi, "<").replace(/\n\n/gi, "\n");
+  commands = search_children(document.getElementById(id)).replace(/<br><br>/gi, "").replace(/<br>/gi, "\n").replace(/&gt;/gi, ">").replace(/&lt;/gi, "<").replace(/\n\n/gi, "\n").replace(/\t/g, "\n").replace(/\t/g, '');;
 
   // Inspired from a stackoverflow post.  I closed my browser before saving the URL, so
   // I can't give credit.  :(
@@ -33,6 +33,7 @@ function copy_to_clipboard(id) {
   t.select();
   document.execCommand('copy');
   document.body.removeChild(t);
+  
 }
 
 function search_children(node) {
